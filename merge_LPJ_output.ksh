@@ -12,11 +12,12 @@
 ##                                                                         ##
 #############################################################################
 
-fpath=/mnt/lustrefs/store/zhen.zhang/output/ERA-Interim/ERA_2015_USDA_MLIT_PERMAFROST
+fpath=/mnt/lustrefs/store/zhen.zhang/output/MERRA2/MERRA2_2016_USDA_DLIT_PERMAFROST/
 inpath=$fpath/transient
 outpath=$fpath/merge
 compath=/home/zhen.zhang/LPJ/LPJ_permafrost
-nyears=115
+nyears=116
+ndailyyears=2
 n=32 #number of individual files
 
 #Make the output directory if it doesn't exist
@@ -74,7 +75,7 @@ $compath/cat2bsq $inpath/msnowpack bin $outpath/msnowpack.bin $n $(($nyears*12))
 #$compath/cat2bsq $inpath/mpft_gpp bin $outpath/mpft_gpp.bin $n $(($nyears*12*9)) 0
 $compath/cat2bsq $inpath/wtd bin $outpath/wtd.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/wet_frac bin $outpath/wet_frac.bin $n $(($nyears*12)) 0
-$compath/cat2bsq $inpath/ch4e bin $outpath/ch4e.bin $n $(($nyears*12)) 0
+$compath/cat2bsq $inpath/ch4e bin $outpath/mch4e.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/mtsoil_0 bin $outpath/mtsoil_0.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/mtsoil_10 bin $outpath/mtsoil_10.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/mtsoil_25 bin $outpath/mtsoil_25.bin $n $(($nyears*12)) 0
@@ -90,4 +91,10 @@ $compath/cat2bsq $inpath/msnowdepth bin $outpath/msnowdepth.bin $n $(($nyears*12
 $compath/cat2bsq $inpath/mice_frac1 bin $outpath/mice_frac1.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/mice_frac2 bin $outpath/mice_frac2.bin $n $(($nyears*12)) 0
 $compath/cat2bsq $inpath/frozen_days bin $outpath/frozen_days.bin $n $(($nyears*12)) 0
+$compath/cat2bsq $inpath/dch4e bin $outpath/dch4e.bin $n $(($ndailyyears*365)) 0
+$compath/cat2bsq $inpath/dgpp bin $outpath/dgpp.bin $n $(($ndailyyears*365)) 0
+$compath/cat2bsq $inpath/dnpp bin $outpath/dnpp.bin $n $(($ndailyyears*365)) 0
+$compath/cat2bsq $inpath/drh bin $outpath/drh.bin $n $(($ndailyyears*365)) 0
+$compath/cat2bsq $inpath/dsm1 bin $outpath/dsm1.bin $n $(($ndailyyears*365)) 0
+$compath/cat2bsq $inpath/dsm2 bin $outpath/dsm2.bin $n $(($ndailyyears*365)) 0
 
