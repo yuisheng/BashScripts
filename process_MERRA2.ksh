@@ -31,8 +31,8 @@ set -A Invar PRECTOTCORR TLML SWGDN LWGAB
 set -A Outvar tp t2m ssrd strd
 set -A aggMed daymean daymean daysum daysum
 
-for varID in `seq 2 3`; do
-    for year in `seq 2016 2016`; do
+for varID in `seq 1 4`; do
+    for year in `seq 1980 2016`; do
 #	    if [ ${year} -gt 2010 ]; then
 #	    fname=MERRA2_400.${ftype[${varID}]}.
 #	    elif [ ${year} -gt 2000 ]; then
@@ -78,6 +78,7 @@ for varID in `seq 2 3`; do
         cdo setunit,W\/m2\/s 'MERRA2_'${Invar[${varID}]}'_'${year}'_tmp4.nc'  'MERRA2_'${Invar[${varID}]}'_'${year}'_final.nc'
     fi
 
+    rm 'MERRA2_'${Invar[${varID}]}'_'${year}'_tmp?.nc'
 done
 
 #Merge all the time slices
