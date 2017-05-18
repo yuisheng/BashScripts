@@ -33,28 +33,28 @@ set -A aggMed daymean daymean daysum daysum
 
 for varID in `seq 1 4`; do
     for year in `seq 1980 2016`; do
-#	    if [ ${year} -gt 2010 ]; then
-#	    fname=MERRA2_400.${ftype[${varID}]}.
-#	    elif [ ${year} -gt 2000 ]; then
-#	    fname=MERRA2_300.${ftype[${varID}]}.
-#	    elif [ ${year} -gt 1991 ]; then
-#	    fname=MERRA2_200.${ftype[${varID}]}.
-#	    else
-#	    fname=MERRA2_100.${ftype[${varID}]}.
-#	    fi
-#
-#	    for month in `seq 1 12`; do
-#		    for day in `seq -f %02g ${daysofmonth[${month}]}`; do
-#            	echo Date=${year}_${month}_${day}
-#			    fmonth=`printf "%02d" ${month}`
-#			    cdo -s -b 32 ${aggMed[${varID}]} -select,name=${Invar[${varID}]} ${frpath}'/'${vpath[${varID}]}'/'${year}'/'${fname}${year}${fmonth}${day}'.nc4' ${frpath}'/'${vpath}'/'${year}'/MERRA2_'${Invar[${varID}]}'_'${year}${fmonth}${day}'.nc'
-#		    done
-#	    done
-#		    
-#        cd  ${frpath}'/'${vpath}'/'${year}'/'
-#		cdo -s mergetime `echo MERRA2_${Invar[${varID}]}*` 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc'
-#        mv 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc' ${frpath}'/'
-#    
+	    if [ ${year} -gt 2010 ]; then
+	    fname=MERRA2_400.${ftype[${varID}]}.
+	    elif [ ${year} -gt 2000 ]; then
+	    fname=MERRA2_300.${ftype[${varID}]}.
+	    elif [ ${year} -gt 1991 ]; then
+	    fname=MERRA2_200.${ftype[${varID}]}.
+	    else
+	    fname=MERRA2_100.${ftype[${varID}]}.
+	    fi
+
+	    for month in `seq 1 12`; do
+		    for day in `seq -f %02g ${daysofmonth[${month}]}`; do
+            	echo Date=${year}_${month}_${day}
+			    fmonth=`printf "%02d" ${month}`
+			    cdo -s -b 32 ${aggMed[${varID}]} -select,name=${Invar[${varID}]} ${frpath}'/'${vpath[${varID}]}'/'${year}'/'${fname}${year}${fmonth}${day}'.nc4' ${frpath}'/'${vpath}'/'${year}'/MERRA2_'${Invar[${varID}]}'_'${year}${fmonth}${day}'.nc'
+		    done
+	    done
+		    
+        cd  ${frpath}'/'${vpath}'/'${year}'/'
+		cdo -s mergetime `echo MERRA2_${Invar[${varID}]}*` 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc'
+        mv 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc' ${frpath}'/'
+    
     cd ${frpath}'/'
     #cdo remapbil
     cdo remapbil,${gridpath} 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc' 'MERRA2_'${Invar[${varID}]}'_'${year}'_tmp1.nc'
@@ -79,9 +79,10 @@ for varID in `seq 1 4`; do
     fi
 
     rm 'MERRA2_'${Invar[${varID}]}'_'${year}'_tmp?.nc'
+
+    cdo -s mergetime `echo 'MERRA2_'${Invar[${varID}]}'*_final.nc'` 'MERRA2_'${Invar[${varID}]}'.nc'
 done
 
 #Merge all the time slices
-#cdo -s mergetime `echo MERRA2_${Invar}*` 'MERRA2_'${Invar}'.nc'
 
 
