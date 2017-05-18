@@ -10,57 +10,73 @@
 #	- LW: LWGAB  mean M2T1NXLFO
 #	- Merge separate daily data to one single data for each month
 #	- Aggregate to 0.5 degree
-#	- Generate final single output for 1980-2015
+#	- Generate final single output for 1980-2016
 #	- Unit Convertion
 #Outputs
-	# Global corrected datasets at 0.5 degree for 1980-2015
+	# Global corrected datasets at 0.5 degree for 1980-2016
 	# No 29th Feb in the outputs
 #Set up parameters
 
 
 #In/out names
-finpath=/mnt/lustrefs/work/zhen.zhang/data/MERRA2/M2T1NXFLX.5.12.4
+frpath=/mnt/lustrefs/work/zhen.zhang/data/MERRA2
 fname=MERRA2_100.tavg1_2d_flx_Nx. #1992 200;2001 300;2011 400;
-#finpath=/mnt/lustrefs/work/zhen.zhang/data/MERRA2/M2T1NXRAD.5.12.4
+#frpath=/mnt/lustrefs/work/zhen.zhang/data/MERRA2/M2T1NXRAD.5.12.4
 #fname=MERRA2_100.tavg1_2d_rad_Nx.
 
-Invar=TLML # PRECTOTCORR, TLML, SWGDN, LWGAB
-Outvar=strd			# tp, t2m, ssrd, strd
-aggMed=daymean		#daysum, daymean, daymax
 
 #List the array
 daysofmonth=(0 31 28 31 30 31 30 31 31 30 31 30 31)
+set -A vpath M2T1NXFLX M2T1NXFLX M2T1NXRAD M2T1NXRAD
+set -A fname tavg1_2d_flx_Nx tavg1_2d_flx_Nx tavg1_2d_rad_Nx tavg1_2d_rad_Nx
+set -A Invar PRECTOTCOR TLML SWGDN LWGAB
+set -A Outvar tp t2m ssrd strd
+set -A aggMed daymean daysum daymean daymax
 
-for year in `seq 1980 2015`; do
-	if [ ${year} -gt 2010 ]; then
-	fname=MERRA2_400.tavg1_2d_flx_Nx.
-	elif [ ${year} -gt 2000 ]; then
-	fname=MERRA2_300.tavg1_2d_flx_Nx.
-	elif [ ${year} -gt 1991 ]; then
-	fname=MERRA2_200.tavg1_2d_flx_Nx.
-	else
-	fname=MERRA2_100.tavg1_2d_flx_Nx.
-	fi
+for varID in `seq 1 4`; do
+    for year in `seq 2015 2016`; do
+	    if [ ${year} -gt 2010 ]; then
+	    fname=MERRA2_400.${fname[${varID}]}.
+	    elif [ ${year} -gt 2000 ]; then
+	    fname=MERRA2_300.${fname[${varID}]}.
+	    elif [ ${year} -gt 1991 ]; then
+	    fname=MERRA2_200.${fname[${varID}]}.
+	    else
+	    fname=MERRA2_100.${fname[${varID}]}.
+	    fi
 
-	for month in `seq 1 12`; do
-		for day in `seq -f %02g ${daysofmonth[${month}]}`; do
-            		echo Date=${year}_${month}_${day}
-			fmonth=`printf "%02d" ${month}`
-			cdo -s -b 32 ${aggMed} -select,name=${Invar} ${finpath}'/'${year}'/'${fmonth}'/'${fname}${year}${fmonth}${day}'.nc4' ${finpath}'/'${year}'/'${fmonth}'/MERRA2_'${Invar}'_'${year}${fmonth}${day}'.nc'
-		done
-		cd  ${finpath}'/'${year}'/'${fmonth}
-		cdo -s mergetime `echo MERRA2_${Invar}*` 'MERRA2_'${Invar}'_'${year}${fmonth}'.nc'
-        mv 'MERRA2_'${Invar}'_'${year}${fmonth}'.nc' ${finpath}'/'
-	done
+	    for month in `seq 1 12`; do
+		    for day in `seq -f %02g ${daysofmonth[${month}]}`; do
+            	echo Date=${year}_${month}_${day}
+			    fmonth=`printf "%02d" ${month}`
+			    cdo -s -b 32 ${aggMed[${varID}]} -select,name=${Invar[${varID}]} ${frpath}'/'${vpath[${varID}]}'/'${year}'/'${fname}${year}${fmonth}${day}'.nc4' ${frpath}'/'${year}'/MERRA2_'${Invar[${varID}]}'_'${year}${fmonth}${day}'.nc'
+		    done
+	    done
+		    
+        cd  ${frpath}'/'${fname}'/'${year}'/'
+		cdo -s mergetime `echo MERRA2_${Invar[${varID}]}*` 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc'
+        mv 'MERRA2_'${Invar[${varID}]}'_'${year}'.nc' ${frpath}'/'
+    
+    done
+
+    #Unit Conversion
+    #Preciptation
+    #cdo mulc,86400 
+    #cdo remapbil,
+    #cdo setunit,mm
+    if [ ${varID} -eq 1 ]; then #prec
+        XX
+    elif [ ${varID} -eq 2 ]; then #tair
+        XX
+    elif [ ${varID} -eq 3 ]; then #swdown
+        XX
+    else #lwdown
+        XX
+    fi
+
 done
-cd ${finpath}'/'
 
 #Merge all the time slices
-cdo -s mergetime `echo MERRA2_${Invar}*` 'MERRA2_'${Invar}'.nc'
+#cdo -s mergetime `echo MERRA2_${Invar}*` 'MERRA2_'${Invar}'.nc'
 
-#Unit Conversion
-#Preciptation
-#cdo mulc,86400 
-#cdo remapbil,
-#cdo setunit,mm
 
