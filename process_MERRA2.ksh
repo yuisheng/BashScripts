@@ -6,8 +6,8 @@
 #	- processing variable: MERRA-2 variable name, aggregate method
 #	- Precipitation: PRECTOTCORR mean (preciptation rate) M2T1NXFLX
 #	- Temperature:  TLML mean M2T1NXFLX
-#	- SW: SWGDN daymax M2T1NXRAD
-#	- LW: LWGAB  daymax M2T1NXRAD
+#	- SW: SWGDN daysum M2T1NXRAD
+#	- LW: LWGAB  daysum M2T1NXRAD
 #	- Merge separate daily data to one single data for each month
 #	- Aggregate to 0.5 degree
 #	- Generate final single output for 1980-2016
